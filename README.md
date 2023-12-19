@@ -57,3 +57,44 @@ Es importante tener en cuenta que hoy en día, el protocolo de WebSockets es sop
 Pero eventualmente, necesitarás resolver muchos de los problemas que esta librería ya tiene resueltos y altamente probados.
 
 💡 No es necesario reinventar la rueda, solo úsala.
+
+## Como funciona Socket.io
+
+Esta librería se divide en dos partes, Engine io y Socket io.
+
+### Engine.io
+Es el motor de la librería. Se encarga de establecer la conexión entre el cliente y el servidor. Maneja las formas de conectarse (Transports), el mecanismo de actualización y detección de des-conexiones.
+
+Cuando este inicia una conexión, el servidor manda cierta información (handshake) que será útil para algunos mecanismos de Engine io.
+
+Transports → Socket io conoce a sus mecanismos de conexión mediante Transports y actualmente tiene 2 formas de conectarse, HTTP Long-Polling y WebSockets.
+
+Mecanismos de actualización → En resumen, es la forma que tiene Engine io de cambiar de HTTP Long-Polling a WebSockets.
+
+Pero, ¿por qué cambiaría de HTTP Long-Polling a WebSockets? Esto se debe a que socket io primero usa HTTP Long-Polling para conectarse, incluso si WebSockets está disponible, debido a que no siempre es posible conectarse mediante estos últimos y la comunicación puede fallar porque algo lo está impidiendo (proxys, firewalls, antivirus, etc.).
+
+💡 El recuperarse de este tipo de fallos puede llegar a tomar hasta 10 segundos antes que la aplicación empiece a funcionar, esto perjudica la experiencia de usuario.
+
+Luego, Engine io hará ciertas validaciones para determinar si se pueden usar los WebSockets, en cuyo caso, terminará conectándose mediante estos.
+
+Detección de des-conexiones → Se incluye un mecanismo para detectar cuando un cliente se desconecta.
+
+El cual consiste en revisar cada cierto tiempo (pingInterval) si la conexión todavía está funcionando. Esto lo logra enviando un paquete al cliente desde el servidor, y el cliente tiene cierto tiempo (pingTimeout) para responder ese paquete.
+
+En el caso que cliente no responda, se considera que este se ha desconectado. Pero si el cliente no recibe el paquete en cierto intervalo de tiempo (pingInterval + pingTimeout) se considera como que el servidor se ha desconectado.
+
+Una conexión se considera cerrada cuándo:
+
+Una solicitud HTTP falla (por ejemplo, el servidor se apaga).
+Una conexión por WebSocket se cierra (por ejemplo, se cierra la ventana).
+Se llama al método socket.disconnect().
+
+
+### Socket.io
+Es la librería en sí. Por su parte, provee funcionalidades extra sobre Engine io, por ejemplo:
+
+- Reconexión automática
+- Packet buffering
+- Broadcasting
+- Multiplexing
+- Manejo de eventos
