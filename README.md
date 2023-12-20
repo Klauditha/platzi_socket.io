@@ -98,3 +98,10 @@ Es la librería en sí. Por su parte, provee funcionalidades extra sobre Engine 
 - Broadcasting
 - Multiplexing
 - Manejo de eventos
+
+## Creación app
+
+```npm init```
+```npm install express socket.io```
+```npm install bufferutil utf-8-validate --save-dev``` Dependencias opcionales para un mejor rendimiento
+```npm install nodemon --save-dev```
