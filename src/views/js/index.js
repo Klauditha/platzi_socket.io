@@ -1,5 +1,19 @@
 const socket = io();
 
+socket.on('welcome', (data) => {
+  //console.log(data);
+  text.textContent = data;
+});
+
+const emitToServer = document.querySelector('#emit-to-server');
+emitToServer.addEventListener('click', () => {
+  socket.emit('server', 'Hola, servidor 😀');
+});
+
+socket.on('everyone', message => {
+    console.log(message);
+});
+/*
 function checkSocketStatus() {
     if (socket.connected) {
         console.log("El socket se encuentra conectado");
@@ -29,3 +43,4 @@ socket.io.on('reconnect_attempt', () => {
 socket.io.on('reconnect', () => {
     console.log("Me he reconectado 😀");
 })
+*/
