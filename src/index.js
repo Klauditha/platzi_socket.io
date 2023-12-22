@@ -9,11 +9,15 @@ const io = new Server(httpServer);
 
 app.use(express.static(path.join(__dirname, 'views')));
 
+const socketsOnline = [];
+
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
 io.on('connection', (socket) => {
+  socketsOnline.push(socket.id);
+
   //Emisión básica
   socket.emit(
     'welcome',
@@ -27,6 +31,32 @@ io.on('connection', (socket) => {
 
   //emision a todos
   io.emit('everyone', socket.id + ' se ha conectado');
+
+  //Emisión a uno solo
+  socket.on('last', (message) => {
+    const lastSocket = socketsOnline[socketsOnline.length - 1];
+    io.to(lastSocket).emit('salute', message);
+  });
+
+  // on , once y off
+  socket.emit("on","holi");
+  socket.emit("on","holi");
+  socket.emit("on","holi");
+
+  socket.emit("once","holi2");
+  socket.emit("once","holi2");
+
+  socket.emit("off","holi3");
+  setTimeout(() => {
+    socket.emit("off","holi3");
+  }, 3000);
+  /*
+  
+  socket.on("on", () => {
+    console.log("Se emite varias veces");
+  })
+  */
+
   /*
   console.log("Clientes conectados: " + io.engine.clientsCount);
   console.log("ID del socket conectado: " + socket.id);

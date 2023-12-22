@@ -193,3 +193,10 @@ https://ajaxhispano.com/ask/lista-de-socketio-eventos-70239/
 - socket.compress(false).emit(/* .. */) → Sin compresión.
 - socket.volatile.emit(/* .. */) → Un mensaje que podría eliminarse si el transporte de bajo nivel no se puede escribir.
 - Con timeout cuando el receptor no recibió el evento en el tiempo esperado.
+
+## On, Once y Off
+
+On → Se usa para detectar (o escuchar) un evento varias veces.
+Once → Se usa para detectar (o escuchar) un evento una sola vez. Sin importar si el evento se emite varias veces.
+Off → Se usa para dejar de escuchar un evento, sin importar que este se siga emitiendo.
+💡 El listener del evento no debe ser una función anónima, sino una función nombrada.
